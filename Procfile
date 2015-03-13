@@ -1,0 +1,1 @@
+web: gunicorn redditMiner.wsgi --log-file -
