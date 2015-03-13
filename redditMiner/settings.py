@@ -26,6 +26,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'miner',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -42,7 +43,7 @@ ROOT_URLCONF = 'redditMiner.urls'
 
 WSGI_APPLICATION = 'redditMiner.wsgi.application'
 
-DATABASES = {'default': dj_database_url.config()}
+DATABASES = {'default': dj_database_url.config(default='postgres://localhost/miner')}
 
 LANGUAGE_CODE = 'en-us'
 
