@@ -4,10 +4,15 @@ import datetime
 
 from django.core import serializers
 from django.http import HttpResponse
+from django.views.generic.base import TemplateView
 
 from bs4 import BeautifulSoup
 
 from .models import GoldMeasure
+
+class MinerHomeTemplateView(TemplateView):
+  template_name = 'home.html'
+
 
 def getCurrentGold():
   url="http://www.reddit.com/"
