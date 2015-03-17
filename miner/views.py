@@ -1,9 +1,9 @@
-import urllib2
-import time
 import datetime
+import json
 import pytz
+import time
+import urllib2
 
-from django.core import serializers
 from django.http import HttpResponse
 from django.views.generic.base import TemplateView
 
@@ -26,6 +26,7 @@ def getCurrentGold():
   gm.save()
 
 def get_todays_gold_json(request):
+  output = [['Time', 'Percentage']]
   pac_tz = pytz.timezone('US/Pacific')
   now = datetime.datetime.now(tz=pac_tz)
   start_of_day = now.replace(hour=0, minute=0, second=0, microsecond=0)
@@ -34,6 +35,8 @@ def get_todays_gold_json(request):
   end_ts = time.mktime(end_of_day.utctimetuple())
   todays_measurements = GoldMeasure.objects.filter(
     timestamp__gte=start_ts, timestamp__lte=end_ts
-  )
-  data = serializers.serialize("json", todays_measurements)
+  ).order_by('timestamp')
+  for tm in todays_measurements:
+    output.append([tm.timestamp, tm.value])
+  data = json.dumps(output)
   return HttpResponse(data, content_type="application/json")
