@@ -1,6 +1,7 @@
 import urllib2
 import time
 import datetime
+import pytz
 
 from django.core import serializers
 from django.http import HttpResponse
@@ -25,7 +26,8 @@ def getCurrentGold():
   gm.save()
 
 def get_todays_gold_json(request):
-  now = datetime.datetime.now()
+  pac_tz = pytz.timezone('US/Pacific')
+  now = datetime.datetime.now(tz=pac_tz)
   start_of_day = now.replace(hour=0, minute=0, second=0, microsecond=0)
   end_of_day = now.replace(hour=23, minute=59, second=59, microsecond=0)
   start_ts = time.mktime(start_of_day.utctimetuple())
