@@ -11,11 +11,14 @@ from bs4 import BeautifulSoup
 
 from .models import GoldMeasure
 
+SECONDS_PER_WEEK = 604800
+
 class MinerHomeTemplateView(TemplateView):
   template_name = 'home.html'
 
 
 def getCurrentGold():
+  deleteOldGold()
   url="http://www.reddit.com/"
   page=urllib2.urlopen(url)
   soup = BeautifulSoup(page.read())
@@ -40,3 +43,9 @@ def get_todays_gold_json(request):
     output.append([tm.timestamp * 1000, tm.value])
   data = json.dumps(output)
   return HttpResponse(data, content_type="application/json")
+
+def deleteOldGold():
+  now = int(time.time())
+  week_ago = now - SECONDS_PER_WEEK
+  old_golds = GoldMeasure.objects.filter(timestamp__lte=week_ago)
+  old_golds.delete()
